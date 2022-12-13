@@ -12,5 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0680c005fa6224590d10a651f7d276, type: 3}
   m_Name: DefaultLevel
   m_EditorClassIdentifier: 
-  Words: []
-  SpawnTime: 0
+  Words:
+  - Selam
+  - Tahta
+  - "Ate\u015F"
+  - "Kiral\u0131k"
+  - Apartman
+  - Rastgele
+  - Direkt
+  - Mandalina
+  - "\xDCz\xFCnt\xFC"
+  - Mutluluk
+  SpawnTime: 2
