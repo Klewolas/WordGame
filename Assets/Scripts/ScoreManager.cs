@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
@@ -6,6 +7,8 @@ public class ScoreManager : MonoBehaviour
     
     private static ScoreManager _instance;
     public static ScoreManager Instance => _instance;
+
+    public static event Action<int> ScoreIncreased;
     
     private void Awake()
     {
@@ -22,6 +25,7 @@ public class ScoreManager : MonoBehaviour
     public void IncreaseScore(int score)
     {
         _playerScore += score;
+        ScoreIncreased?.Invoke(_playerScore);
     }
 
     public void ResetPlayerScore()
