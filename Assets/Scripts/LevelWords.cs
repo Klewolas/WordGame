@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Level", menuName = "ScriptableObjects/Level", order = 1)]
-public class SO_LevelWords : ScriptableObject
+public class LevelWords : ScriptableObject
 {
     [SerializeField] public List<string> Words;
 
