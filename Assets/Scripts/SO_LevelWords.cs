@@ -8,4 +8,8 @@ public class SO_LevelWords : ScriptableObject
     [SerializeField] public List<string> Words;
 
     [SerializeField] public int SpawnTime;
+
+    [SerializeField] public int LevelWinScore;
+
+    [SerializeField] public int LevelTime;
 }
