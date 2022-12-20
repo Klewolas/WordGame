@@ -17,6 +17,6 @@ public class ScoreUpdateListener : MonoBehaviour
 
     void ScoreTextUpdate(int score)
     {
-        _scoreText.text = "Score :" + score;
+        _scoreText.text = "Score : " + score;
     }
 }

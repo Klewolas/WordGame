@@ -4,6 +4,8 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     private int _playerScore;
+
+    [SerializeField] private int _earnScoreCount;
     
     private static ScoreManager _instance;
     public static ScoreManager Instance => _instance;
@@ -22,9 +24,9 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public void IncreaseScore(int score)
+    public void IncreaseScore()
     {
-        _playerScore += score;
+        _playerScore += _earnScoreCount;
         ScoreIncreased?.Invoke(_playerScore);
     }
 
