@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class LevelDataManager : MonoBehaviour
 {
-    public LevelWords LevelData { get; private set; }
+    public bool IsInitialized { get; private set;}
+    public LevelData LevelData { get; private set; }
 
     private static LevelDataManager _instance;
     public static LevelDataManager Instance => _instance;
@@ -26,12 +27,15 @@ public class LevelDataManager : MonoBehaviour
     
     void GetLevelData()
     {
-        LevelData = Resources.Load<LevelWords>("ScriptableObjects/Levels/Level" +
+        LevelData = Resources.Load<LevelData>("ScriptableObjects/Levels/Level" +
                                                    (PlayerDataManager.Instance.PlayerData.CurrentLevel + 1));
 
         if (LevelData == null)
         {
-            LevelData = Resources.Load<LevelWords>("ScriptableObjects/Levels/DefaultLevel");
+            LevelData = Resources.Load<LevelData>("ScriptableObjects/Levels/DefaultLevel");
         }
+        Debug.Log("LevelDataManager | Level data received.");
+
+        IsInitialized = true;
     }
 }

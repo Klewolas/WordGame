@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -6,6 +7,12 @@ struct SpawnData
 {
     public List<string> words;
     public int spawnTime;
+
+    public SpawnData(List<string> words, int spawnTime)
+    {
+        this.words = words;
+        this.spawnTime = spawnTime;
+    }
 }
 
 public class LevelSpawnManager : MonoBehaviour
@@ -16,6 +23,9 @@ public class LevelSpawnManager : MonoBehaviour
     public float elapsedTime = 0.0f;
 
     private SpawnData _spawnData;
+
+    public List<string> AliveWords;
+    
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -28,8 +38,10 @@ public class LevelSpawnManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    IEnumerator Start()
     {
+        _spawnData = new SpawnData(new List<string>(), 999);
+        yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized); 
         GetSpawnData();
     }
 
@@ -39,14 +51,16 @@ public class LevelSpawnManager : MonoBehaviour
         _spawnData.spawnTime = LevelDataManager.Instance.LevelData.SpawnTime;
     }
 
-    void Update()
+    void LateUpdate()
     {
         elapsedTime += Time.deltaTime;
 
         if (elapsedTime > _spawnData.spawnTime)
         {
             elapsedTime = 0;
-            Debug.Log("Word : " + _spawnData.words[Random.Range(0, _spawnData.words.Count)]);
+            var tempWord = _spawnData.words[Random.Range(0, _spawnData.words.Count)];
+            Debug.Log("Word : " + tempWord);
+            AliveWords.Add(tempWord);
         }
     }
 }
