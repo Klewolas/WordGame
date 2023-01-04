@@ -22,3 +22,6 @@ MonoBehaviour:
   - "A\u011Fa\xE7"
   - Balta
   SpawnTime: 3
+  LevelWinScore: 250
+  LevelTime: 100
+  WordVelocity: 5
