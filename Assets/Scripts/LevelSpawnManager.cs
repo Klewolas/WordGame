@@ -27,7 +27,7 @@ public class LevelSpawnManager : MonoBehaviour
 
     private SpawnData _spawnData;
 
-    public List<string> AliveWords;
+    public List<Word> AliveWords;
 
     #region Pool Fields
 
@@ -68,8 +68,8 @@ public class LevelSpawnManager : MonoBehaviour
             elapsedTime = 0;
             var tempWord = _spawnData.words[Random.Range(0, _spawnData.words.Count)];
             Debug.Log("Word : " + tempWord);
-            AliveWords.Add(tempWord);
             var word = Pool.Get();
+            AliveWords.Add(word);
             word.SetText(tempWord);
             word.wordVelocity = _spawnData.wordVelocity;
         }

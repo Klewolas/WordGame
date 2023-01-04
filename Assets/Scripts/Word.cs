@@ -1,11 +1,12 @@
-using System;
 using TMPro;
 using UnityEngine;
 
 public class Word : MonoBehaviour
 {
+    public string AliveWord;
     [SerializeField] private TMP_Text _wordText;
     public float wordVelocity;
+    
     private void LateUpdate()
     {
         var position = transform.position;
@@ -19,6 +20,7 @@ public class Word : MonoBehaviour
 
     public void SetText(string aliveWord)
     {
+        AliveWord = aliveWord;
         _wordText.text = aliveWord;
     }
 }

@@ -15,10 +15,11 @@ public class InputListener : MonoBehaviour
     {
         foreach (var aliveWord in LevelSpawnManager.Instance.AliveWords)
         {
-            if (String.Equals(aliveWord, _inputField.text, StringComparison.CurrentCultureIgnoreCase))
+            if (String.Equals(aliveWord.AliveWord, _inputField.text, StringComparison.CurrentCultureIgnoreCase))
             {
                 ScoreManager.Instance.IncreaseScore();
                 LevelSpawnManager.Instance.AliveWords.Remove(aliveWord);
+                LevelSpawnManager.Instance.Pool.Release(aliveWord);
                 _inputField.text = "";
                 break;
             }
