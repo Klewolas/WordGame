@@ -23,7 +23,7 @@ public class LevelSpawnManager : MonoBehaviour
     private static LevelSpawnManager _instance;
     public static LevelSpawnManager Instance => _instance;
 
-    public float elapsedTime = 0.0f;
+    private float elapsedTime = 0.0f;
 
     private SpawnData _spawnData;
 
@@ -32,7 +32,7 @@ public class LevelSpawnManager : MonoBehaviour
     #region Pool Fields
 
     [SerializeField] private Word _wordObject;
-    private IObjectPool<Word> _pool;
+    public IObjectPool<Word> Pool;
 
     #endregion
 
@@ -56,7 +56,7 @@ public class LevelSpawnManager : MonoBehaviour
         yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
         GetSpawnData();
         
-        _pool = new ObjectPool<Word>(CreatePooledItem,OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, false, 10, 150);
+        Pool = new ObjectPool<Word>(CreatePooledItem,OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, false, 10, 150);
     }
 
     void LateUpdate()
@@ -69,9 +69,9 @@ public class LevelSpawnManager : MonoBehaviour
             var tempWord = _spawnData.words[Random.Range(0, _spawnData.words.Count)];
             Debug.Log("Word : " + tempWord);
             AliveWords.Add(tempWord);
-            var word = _pool.Get();
+            var word = Pool.Get();
             word.SetText(tempWord);
-            word.wordVelocity = 0.0055f;
+            word.wordVelocity = _spawnData.wordVelocity;
         }
     }
 
@@ -88,7 +88,7 @@ public class LevelSpawnManager : MonoBehaviour
     
     private Word CreatePooledItem()
     {
-        var word = Instantiate(_wordObject);
+        var word = Instantiate(_wordObject, new Vector3(Random.Range(-3f,3f), 4, 0), Quaternion.identity);
 
         return word;
     }
@@ -96,6 +96,7 @@ public class LevelSpawnManager : MonoBehaviour
     private void OnTakeFromPool(Word obj)
     {
         obj.gameObject.SetActive(true);
+        obj.gameObject.transform.position = new Vector3(Random.Range(-3f, 3f), 4, 0);
     }
 
     private void OnDestroyPoolObject(Word obj)

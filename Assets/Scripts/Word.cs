@@ -10,6 +10,11 @@ public class Word : MonoBehaviour
     {
         var position = transform.position;
         transform.position = new Vector3(position.x, position.y - wordVelocity, position.z);
+        if (transform.position.y < -6)
+        {
+            LevelSpawnManager.Instance.Pool.Release(this);
+            ScoreManager.Instance.DecreaseScore();
+        }
     }
 
     public void SetText(string aliveWord)

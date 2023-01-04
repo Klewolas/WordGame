@@ -30,6 +30,12 @@ public class ScoreManager : MonoBehaviour
         ScoreIncreased?.Invoke(_playerScore);
     }
 
+    public void DecreaseScore()
+    {
+        _playerScore -= _earnScoreCount / 2;
+        ScoreIncreased?.Invoke(_playerScore);
+    }
+
     public void ResetPlayerScore()
     {
         _playerScore = 0;

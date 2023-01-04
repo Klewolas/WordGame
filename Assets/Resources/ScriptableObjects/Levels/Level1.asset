@@ -24,4 +24,4 @@ MonoBehaviour:
   SpawnTime: 3
   LevelWinScore: 250
   LevelTime: 100
-  WordVelocity: 5
+  WordVelocity: 0.005
