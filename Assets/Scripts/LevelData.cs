@@ -12,4 +12,6 @@ public class LevelData : ScriptableObject
     [SerializeField] public int LevelWinScore;
 
     [SerializeField] public int LevelTime;
+
+    [SerializeField] public int WordVelocity;
 }
