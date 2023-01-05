@@ -44,6 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8140cc9fa9835f47870a93e3ef289c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elapsedTime: 0
   AliveWords: []
-  _wordObject: {fileID: -1995516216971376234, guid: 9c52404a6bc53a647afdf2fcf207f029, type: 3}
+  _wordObject: {fileID: 4122711248019493350, guid: 9c52404a6bc53a647afdf2fcf207f029, type: 3}
