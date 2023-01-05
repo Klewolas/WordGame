@@ -14,6 +14,7 @@ public class Word : MonoBehaviour
         if (transform.position.y < -6)
         {
             LevelSpawnManager.Instance.Pool.Release(this);
+            ComboManager.Instance.ResetCombo();
             ScoreManager.Instance.DecreaseScore();
         }
     }

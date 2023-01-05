@@ -17,6 +17,7 @@ public class InputListener : MonoBehaviour
         {
             if (String.Equals(aliveWord.AliveWord, _inputField.text, StringComparison.CurrentCultureIgnoreCase))
             {
+                ComboManager.Instance.IncreaseCombo();
                 ScoreManager.Instance.IncreaseScore();
                 LevelSpawnManager.Instance.AliveWords.Remove(aliveWord);
                 LevelSpawnManager.Instance.Pool.Release(aliveWord);

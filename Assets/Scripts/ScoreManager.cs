@@ -26,7 +26,7 @@ public class ScoreManager : MonoBehaviour
 
     public void IncreaseScore()
     {
-        _playerScore += _earnScoreCount;
+        _playerScore += _earnScoreCount * ComboManager.Instance.ComboCount;
         ScoreIncreased?.Invoke(_playerScore);
     }
 

@@ -58,6 +58,9 @@ public class LevelSpawnManager : MonoBehaviour
         yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
         GetSpawnData();
         
+        //TODO : Move to level starter script.
+        ComboManager.Instance.ResetCombo();
+        
         Pool = new ObjectPool<Word>(CreatePooledItem,OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, false, 10, 150);
     }
 
