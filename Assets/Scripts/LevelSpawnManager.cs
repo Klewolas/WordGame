@@ -29,6 +29,8 @@ public class LevelSpawnManager : MonoBehaviour
 
     public List<Word> AliveWords;
 
+    [SerializeField] private Transform _wordsParent;
+
     #region Pool Fields
 
     [SerializeField] private Word _wordObject;
@@ -88,7 +90,7 @@ public class LevelSpawnManager : MonoBehaviour
     
     private Word CreatePooledItem()
     {
-        var word = Instantiate(_wordObject, new Vector3(Random.Range(-3f,3f), 4, 0), Quaternion.identity);
+        var word = Instantiate(_wordObject, new Vector3(Random.Range(-3f,3f), 4, 0), Quaternion.identity, _wordsParent);
 
         return word;
     }
