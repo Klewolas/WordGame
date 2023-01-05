@@ -17,6 +17,8 @@ public class ComboManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        ComboCount = 1;
     }
 
     public void IncreaseCombo()
