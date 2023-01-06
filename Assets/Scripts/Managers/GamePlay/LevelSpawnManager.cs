@@ -34,7 +34,11 @@ public class LevelSpawnManager : MonoBehaviour
     #region Pool Fields
 
     [SerializeField] private Word _wordObject;
+    [SerializeField] private ParticleSystem _particle;
+    public Vector3 ParticleSpawnPosition;
+    
     public IObjectPool<Word> Pool;
+    public IObjectPool<ParticleSystem> ParticlePool;
 
     #endregion
 
@@ -59,6 +63,9 @@ public class LevelSpawnManager : MonoBehaviour
         GetSpawnData();
 
         Pool = new ObjectPool<Word>(CreatePooledItem,OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, false, 10, 150);
+        
+        ParticlePool = new ObjectPool<ParticleSystem>(CreatePooledParticle, OnTakeFromParticlePool,
+            OnReturnedToParticlePool, OnDestroyParticlePoolObject, false, 10, 150);
     }
 
     void LateUpdate()
@@ -107,6 +114,32 @@ public class LevelSpawnManager : MonoBehaviour
     }
 
     private void OnReturnedToPool(Word obj)
+    {
+        obj.gameObject.SetActive(false);
+    }
+    
+    private ParticleSystem CreatePooledParticle()
+    {
+        var particle = Instantiate(_particle, ParticleSpawnPosition, Quaternion.identity, _wordsParent);
+
+
+        var returnToPool = particle.gameObject.AddComponent<ReturnToPool>();
+        returnToPool.pool = ParticlePool;
+        
+        return particle;
+    }
+    
+    private void OnTakeFromParticlePool(ParticleSystem obj)
+    {
+        obj.gameObject.SetActive(true);
+    }
+
+    private void OnDestroyParticlePoolObject(ParticleSystem obj)
+    {
+        Destroy(obj.gameObject);
+    }
+
+    private void OnReturnedToParticlePool(ParticleSystem obj)
     {
         obj.gameObject.SetActive(false);
     }

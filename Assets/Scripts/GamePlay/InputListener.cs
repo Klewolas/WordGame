@@ -20,6 +20,9 @@ public class InputListener : MonoBehaviour
                 ScoreManager.Instance.IncreaseScore();
                 ComboManager.Instance.IncreaseCombo();
                 LevelSpawnManager.Instance.AliveWords.Remove(aliveWord);
+
+                LevelSpawnManager.Instance.ParticleSpawnPosition = aliveWord.gameObject.transform.position;
+                LevelSpawnManager.Instance.ParticlePool.Get();
                 LevelSpawnManager.Instance.Pool.Release(aliveWord);
                 _inputField.text = "";
                 break;
