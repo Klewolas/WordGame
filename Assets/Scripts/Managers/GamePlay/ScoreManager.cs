@@ -40,9 +40,5 @@ public class ScoreManager : MonoBehaviour
     {
         _playerScore = 0;
     }
-
-    public bool CheckScoreIsEnoughForGame()
-    {
-        return _playerScore > LevelDataManager.Instance.LevelData.LevelWinScore;
-    }
+    
 }

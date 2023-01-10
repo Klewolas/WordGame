@@ -36,7 +36,7 @@ public class LevelSpawnManager : MonoBehaviour
 
     [SerializeField] private Word _wordObject;
     [SerializeField] private ParticleSystem _particle;
-    public Vector3 ParticleSpawnPosition;
+    private Vector3 _particleSpawnPosition;
     
     public IObjectPool<Word> Pool;
     public IObjectPool<ParticleSystem> ParticlePool;
@@ -111,7 +111,7 @@ public class LevelSpawnManager : MonoBehaviour
         ScoreManager.Instance.IncreaseScore();
         ComboManager.Instance.IncreaseCombo();
         
-        ParticleSpawnPosition = word.gameObject.transform.position;
+        _particleSpawnPosition = word.gameObject.transform.position;
 
         ParticlePool.Get();
         AliveWords.Remove(word);
@@ -145,7 +145,7 @@ public class LevelSpawnManager : MonoBehaviour
     
     private ParticleSystem CreatePooledParticle()
     {
-        var particle = Instantiate(_particle, ParticleSpawnPosition, Quaternion.identity, _wordsParent);
+        var particle = Instantiate(_particle, _particleSpawnPosition, Quaternion.identity, _wordsParent);
 
 
         var returnToPool = particle.gameObject.AddComponent<ReturnToPool>();
@@ -157,7 +157,7 @@ public class LevelSpawnManager : MonoBehaviour
     private void OnTakeFromParticlePool(ParticleSystem obj)
     {
         obj.gameObject.SetActive(true);
-        obj.gameObject.transform.position = ParticleSpawnPosition;
+        obj.gameObject.transform.position = _particleSpawnPosition;
     }
 
     private void OnDestroyParticlePoolObject(ParticleSystem obj)
