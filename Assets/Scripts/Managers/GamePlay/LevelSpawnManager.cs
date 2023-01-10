@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,16 +57,21 @@ public class LevelSpawnManager : MonoBehaviour
         }
     }
 
-    IEnumerator Start()
+    void Start()
     {
-        _spawnData = new SpawnData(new List<string>(), 999, 999);
-        yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
-        GetSpawnData();
+        StartCoroutine(PrepareSpawnData());
 
+        InputListener.WordMatched += WordMatchedActions;
+        
         Pool = new ObjectPool<Word>(CreatePooledItem,OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, false, 10, 150);
         
         ParticlePool = new ObjectPool<ParticleSystem>(CreatePooledParticle, OnTakeFromParticlePool,
             OnReturnedToParticlePool, OnDestroyParticlePoolObject, false, 10, 150);
+    }
+
+    private void OnDestroy()
+    {
+        InputListener.WordMatched -= WordMatchedActions;
     }
 
     void LateUpdate()
@@ -85,12 +91,31 @@ public class LevelSpawnManager : MonoBehaviour
     }
 
     #endregion
+
+    private IEnumerator PrepareSpawnData()
+    {
+        _spawnData = new SpawnData(new List<string>(), 999, 999);
+        yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
+        GetSpawnData();
+    }
     
     private void GetSpawnData()
     {
         _spawnData.words = LevelDataManager.Instance.LevelData.Words;
         _spawnData.spawnTime = LevelDataManager.Instance.LevelData.SpawnTime;
         _spawnData.wordVelocity = LevelDataManager.Instance.LevelData.WordVelocity;
+    }
+
+    private void WordMatchedActions(Word word)
+    {
+        ScoreManager.Instance.IncreaseScore();
+        ComboManager.Instance.IncreaseCombo();
+        
+        ParticleSpawnPosition = word.gameObject.transform.position;
+
+        ParticlePool.Get();
+        AliveWords.Remove(word);
+        Pool.Release(word);
     }
 
     #region Pool Functions
@@ -132,6 +157,7 @@ public class LevelSpawnManager : MonoBehaviour
     private void OnTakeFromParticlePool(ParticleSystem obj)
     {
         obj.gameObject.SetActive(true);
+        obj.gameObject.transform.position = ParticleSpawnPosition;
     }
 
     private void OnDestroyParticlePoolObject(ParticleSystem obj)

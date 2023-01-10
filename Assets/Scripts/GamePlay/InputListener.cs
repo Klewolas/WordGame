@@ -6,6 +6,8 @@ public class InputListener : MonoBehaviour
 {
     [SerializeField] private InputField _inputField;
 
+    public static event Action<Word> WordMatched;
+
     private void Start()
     {
         _inputField.onValueChanged.AddListener(delegate { ControlWords(); });
@@ -17,13 +19,7 @@ public class InputListener : MonoBehaviour
         {
             if (String.Equals(aliveWord.AliveWord, _inputField.text, StringComparison.CurrentCultureIgnoreCase))
             {
-                ScoreManager.Instance.IncreaseScore();
-                ComboManager.Instance.IncreaseCombo();
-                LevelSpawnManager.Instance.AliveWords.Remove(aliveWord);
-
-                LevelSpawnManager.Instance.ParticleSpawnPosition = aliveWord.gameObject.transform.position;
-                LevelSpawnManager.Instance.ParticlePool.Get();
-                LevelSpawnManager.Instance.Pool.Release(aliveWord);
+                WordMatched?.Invoke(aliveWord);
                 _inputField.text = "";
                 break;
             }
