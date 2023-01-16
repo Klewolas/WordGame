@@ -23,11 +23,7 @@ public class LevelStateManager : MonoBehaviour
 
     public static event Action LevelLose;
 
-    public static event Action<int> TimeUpdate;
-
     private LevelConditions _levelConditions;
-
-    private bool _timerIsRunning;
 
     public GameState GameState { get; private set; }
 
@@ -49,28 +45,6 @@ public class LevelStateManager : MonoBehaviour
 
         GameState = GameState.GamePlay;
         ScoreManager.ScoreIncreased += CheckScoreEnoughToWin;
-
-        _timerIsRunning = true;
-    }
-
-    private void LateUpdate()
-    {
-        if (_timerIsRunning == false && GameState != GameState.GamePlay)
-        {
-            return;
-        }
-
-        _levelConditions.levelTime -= Time.deltaTime;
-
-
-        if (_levelConditions.levelTime < 0)
-        {
-            _timerIsRunning = false;
-            GameState = GameState.GameLose;
-            LevelLose?.Invoke();
-        }
-
-        TimeUpdate?.Invoke((int) _levelConditions.levelTime);
     }
 
     private IEnumerator PrepareLevelConditionsData()
@@ -90,10 +64,15 @@ public class LevelStateManager : MonoBehaviour
     {
         if (_levelConditions.levelWinScore < score)
         {
-            _timerIsRunning = false;
             GameState = GameState.GameWin;
             LevelWin?.Invoke();
         }
+    }
+
+    public void LevelLoseWithTime()
+    {
+        GameState = GameState.GameLose;
+        LevelLose?.Invoke();
     }
 }
 
