@@ -8,10 +8,10 @@ using Random = UnityEngine.Random;
 struct SpawnData
 {
     public List<string> words;
-    public int spawnTime;
+    public float spawnTime;
     public float wordVelocity;
 
-    public SpawnData(List<string> words, int spawnTime, float wordVelocity)
+    public SpawnData(List<string> words, float spawnTime, float wordVelocity)
     {
         this.words = words;
         this.spawnTime = spawnTime;
@@ -23,8 +23,6 @@ public class LevelSpawnManager : MonoBehaviour
 {
     private static LevelSpawnManager _instance;
     public static LevelSpawnManager Instance => _instance;
-
-    private float elapsedTime = 0.0f;
 
     private SpawnData _spawnData;
 
@@ -67,43 +65,28 @@ public class LevelSpawnManager : MonoBehaviour
         
         ParticlePool = new ObjectPool<ParticleSystem>(CreatePooledParticle, OnTakeFromParticlePool,
             OnReturnedToParticlePool, OnDestroyParticlePoolObject, false, 10, 150);
+
+        StartCoroutine(SpawnWordsCor());
     }
 
     private void OnDestroy()
     {
         InputListener.WordMatched -= WordMatchedActions;
     }
-
-    void LateUpdate()
-    {
-        elapsedTime += Time.deltaTime;
-
-        if (elapsedTime > _spawnData.spawnTime)
-        {
-            elapsedTime = 0;
-            var tempWord = _spawnData.words[Random.Range(0, _spawnData.words.Count)];
-            Debug.Log("Word : " + tempWord);
-            var word = Pool.Get();
-            AliveWords.Add(word);
-            word.SetText(tempWord);
-            word.wordVelocity = _spawnData.wordVelocity;
-        }
-    }
-
+    
     #endregion
 
     private IEnumerator PrepareSpawnData()
     {
-        _spawnData = new SpawnData(new List<string>(), 999, 999);
         yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
         GetSpawnData();
     }
     
     private void GetSpawnData()
     {
-        _spawnData.words = LevelDataManager.Instance.LevelData.Words;
-        _spawnData.spawnTime = LevelDataManager.Instance.LevelData.SpawnTime;
-        _spawnData.wordVelocity = LevelDataManager.Instance.LevelData.WordVelocity;
+        _spawnData = new SpawnData(LevelDataManager.Instance.LevelData.Words,
+            LevelDataManager.Instance.LevelData.SpawnTime,
+            LevelDataManager.Instance.LevelData.WordVelocity);
     }
 
     private void WordMatchedActions(Word word)
@@ -116,6 +99,30 @@ public class LevelSpawnManager : MonoBehaviour
         ParticlePool.Get();
         AliveWords.Remove(word);
         Pool.Release(word);
+    }
+    
+    
+    private IEnumerator SpawnWordsCor()
+    {
+        while (true)
+        {
+            if (CheckCanSpawn())
+            {
+                var tempWord = _spawnData.words[Random.Range(0, _spawnData.words.Count)];
+                Debug.Log("Word : " + tempWord);
+                var word = Pool.Get();
+                AliveWords.Add(word);
+                word.SetText(tempWord);
+                word.wordVelocity = _spawnData.wordVelocity;
+            }
+            
+            yield return new WaitForSeconds(_spawnData.spawnTime);
+        }
+    }
+
+    private bool CheckCanSpawn()
+    {
+        return LevelStateManager.Instance.GameState == GameState.GamePlay && _spawnData.words != null;
     }
 
     #region Pool Functions

@@ -7,7 +7,7 @@ public class LevelData : ScriptableObject
 {
     [SerializeField] public List<string> Words;
 
-    [SerializeField] public int SpawnTime;
+    [SerializeField] public float SpawnTime;
 
     [SerializeField] public int LevelWinScore;
 
