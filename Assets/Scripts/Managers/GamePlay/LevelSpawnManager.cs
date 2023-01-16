@@ -28,14 +28,13 @@ public class LevelSpawnManager : MonoBehaviour
 
     public List<Word> AliveWords;
 
-    [SerializeField] private Transform _wordsParent;
-
     #region Pool Fields
 
     [SerializeField] private Word _wordObject;
     [SerializeField] private ParticleSystem _particle;
     private Vector3 _particleSpawnPosition;
-    
+    private Transform _wordsParent;
+
     public IObjectPool<Word> Pool;
     public IObjectPool<ParticleSystem> ParticlePool;
 
@@ -60,6 +59,8 @@ public class LevelSpawnManager : MonoBehaviour
         StartCoroutine(PrepareSpawnData());
 
         InputListener.WordMatched += WordMatchedActions;
+        LevelStateManager.LevelLose += ClearAllWords;
+        LevelStateManager.LevelWin += ClearAllWords;
         
         Pool = new ObjectPool<Word>(CreatePooledItem,OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, false, 10, 150);
         
@@ -72,6 +73,8 @@ public class LevelSpawnManager : MonoBehaviour
     private void OnDestroy()
     {
         InputListener.WordMatched -= WordMatchedActions;
+        LevelStateManager.LevelLose -= ClearAllWords;
+        LevelStateManager.LevelWin -= ClearAllWords;
     }
     
     #endregion
@@ -79,6 +82,7 @@ public class LevelSpawnManager : MonoBehaviour
     private IEnumerator PrepareSpawnData()
     {
         yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
+        _wordsParent = CanvasObjectReferenceHolder.Instance.WordsSpawnParent;
         GetSpawnData();
     }
     
@@ -91,14 +95,14 @@ public class LevelSpawnManager : MonoBehaviour
 
     private void WordMatchedActions(Word word)
     {
-        ScoreManager.Instance.IncreaseScore();
-        ComboManager.Instance.IncreaseCombo();
-        
         _particleSpawnPosition = word.gameObject.transform.position;
 
         ParticlePool.Get();
         AliveWords.Remove(word);
         Pool.Release(word);
+        
+        ScoreManager.Instance.IncreaseScore();
+        ComboManager.Instance.IncreaseCombo();
     }
     
     
@@ -123,6 +127,19 @@ public class LevelSpawnManager : MonoBehaviour
     private bool CheckCanSpawn()
     {
         return LevelStateManager.Instance.GameState == GameState.GamePlay && _spawnData.words != null;
+    }
+
+
+    private void ClearAllWords()
+    {
+        foreach (var word in AliveWords)
+        {
+            _particleSpawnPosition = word.gameObject.transform.position;
+
+            ParticlePool.Get();
+            Pool.Release(word);
+        }
+        AliveWords.Clear();
     }
 
     #region Pool Functions
