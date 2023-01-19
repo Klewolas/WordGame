@@ -21,14 +21,25 @@ public class PlayerDataManager : MonoBehaviour
             _instance = this;
         }
         
-        PlayerData = new PlayerData();
+        //TODO : Menude bulunduğu için her menu yüklendiğinde kendini dontdestroyonload'a ekliyor. MainMenu sahnesi yaratıp buradan başlatman lazım.
+        DontDestroyOnLoad(gameObject);
+
+    }
+
+    private void Start()
+    {
         _saveFile = Application.persistentDataPath + "/playerData.json";
         PlayerData = ReadFile();
     }
 
+    private void OnDestroy()
+    {
+        WriteFile();
+    }
+
     private PlayerData ReadFile()
     {
-        if (!File.Exists(_saveFile)) return PlayerData;
+        if (!File.Exists(_saveFile)) return PlayerData = new PlayerData(1);
 
         string fileContents = File.ReadAllText(_saveFile);
         PlayerData = JsonUtility.FromJson<PlayerData>(fileContents);
