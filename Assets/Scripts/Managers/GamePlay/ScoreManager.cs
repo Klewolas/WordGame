@@ -24,19 +24,18 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        ResetPlayerScore();
+    }
+
     public void IncreaseScore()
     {
         _playerScore += _earnScoreCount * ComboManager.Instance.ComboCount;
         ScoreIncreased?.Invoke(_playerScore);
     }
 
-    public void DecreaseScore()
-    {
-        _playerScore -= _earnScoreCount / 2;
-        ScoreIncreased?.Invoke(_playerScore);
-    }
-
-    public void ResetPlayerScore()
+    private void ResetPlayerScore()
     {
         _playerScore = 0;
     }
