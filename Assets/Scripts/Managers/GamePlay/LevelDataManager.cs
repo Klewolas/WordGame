@@ -1,13 +1,15 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelDataManager : MonoBehaviour
 {
-    public bool IsInitialized { get; private set;}
+    public bool IsInitialized { get; private set; }
     public LevelData LevelData { get; private set; }
 
     private static LevelDataManager _instance;
     public static LevelDataManager Instance => _instance;
-    
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -28,12 +30,14 @@ public class LevelDataManager : MonoBehaviour
     void GetLevelData()
     {
         LevelData = Resources.Load<LevelData>("ScriptableObjects/Levels/Level" +
-                                                   (PlayerDataManager.Instance.PlayerData.CurrentLevel + 1));
-
+                                              PlayerDataManager.Instance.PlayerData.CurrentLevel);
         if (LevelData == null)
         {
-            LevelData = Resources.Load<LevelData>("ScriptableObjects/Levels/DefaultLevel");
+            Debug.LogError($"LevelDataManager | Level {PlayerDataManager.Instance.PlayerData.CurrentLevel} is not found");
+            SceneManager.LoadScene("Menu");
+            return;
         }
+        
         Debug.Log("LevelDataManager | Level data received.");
 
         IsInitialized = true;
