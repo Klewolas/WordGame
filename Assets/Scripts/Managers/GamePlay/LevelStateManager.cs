@@ -5,12 +5,12 @@ using UnityEngine;
 struct LevelConditions
 {
     public int levelWinScore;
-    public float levelTime;
+    public float life;
 
-    public LevelConditions(int levelWinScore, float levelTime)
+    public LevelConditions(int levelWinScore, float life)
     {
         this.levelWinScore = levelWinScore;
-        this.levelTime = levelTime;
+        this.life = life;
     }
 }
 
@@ -45,6 +45,13 @@ public class LevelStateManager : MonoBehaviour
 
         GameState = GameState.GamePlay;
         ScoreManager.ScoreIncreased += CheckScoreEnoughToWin;
+        LifeManager.LoseLife += CheckIsLifeZero;
+    }
+
+    private void OnDestroy()
+    {
+        ScoreManager.ScoreIncreased -= CheckScoreEnoughToWin;
+        LifeManager.LoseLife -= CheckIsLifeZero;
     }
 
     private IEnumerator PrepareLevelConditionsData()
@@ -56,7 +63,7 @@ public class LevelStateManager : MonoBehaviour
 
     private void GetLevelConditionsData()
     {
-        _levelConditions.levelTime = LevelDataManager.Instance.LevelData.LevelTime;
+        _levelConditions.life = LevelDataManager.Instance.LevelData.Life;
         _levelConditions.levelWinScore = LevelDataManager.Instance.LevelData.LevelWinScore;
     }
 
@@ -69,10 +76,13 @@ public class LevelStateManager : MonoBehaviour
         }
     }
 
-    public void LevelLoseWithTime()
+    public void CheckIsLifeZero(int spentLife)
     {
-        GameState = GameState.GameLose;
-        LevelLose?.Invoke();
+        if (_levelConditions.life == spentLife)
+        {
+            GameState = GameState.GameLose;
+            LevelLose?.Invoke();
+        }
     }
 }
 
