@@ -15,7 +15,7 @@ public class Word : MonoBehaviour
         {
             LevelSpawnManager.Instance.Pool.Release(this);
             ComboManager.Instance.ResetCombo();
-            ScoreManager.Instance.DecreaseScore();
+            LifeManager.Instance.IncreaseSpentLife();
         }
     }
 
