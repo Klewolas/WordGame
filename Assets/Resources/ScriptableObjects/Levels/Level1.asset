@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0680c005fa6224590d10a651f7d276, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
+  LevelNumber: 1
   Words:
   - Merhaba
   - Elma
@@ -21,7 +22,7 @@ MonoBehaviour:
   - Berke
   - "A\u011Fa\xE7"
   - Balta
-  SpawnTime: 3
+  SpawnTime: 1
   LevelWinScore: 250
-  LevelTime: 100
+  LevelTime: 20
   WordVelocity: 0.005
