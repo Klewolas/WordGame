@@ -4,11 +4,15 @@ using UnityEngine.UI;
 
 public class PlayButton : MonoBehaviour
 {
-    [SerializeField] private Button _playButton;
-    // Start is called before the first frame update
+    [SerializeField] private Button _button;
     void Start()
     {
-        _playButton.onClick.AddListener(PlayGame);
+        _button.onClick.AddListener(PlayGame);
+    }
+    
+    private void OnDestroy()
+    {
+        _button.onClick.RemoveAllListeners();
     }
 
     private void PlayGame()
