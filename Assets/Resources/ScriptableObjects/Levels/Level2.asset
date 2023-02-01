@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf0680c005fa6224590d10a651f7d276, type: 3}
-  m_Name: Level1
+  m_Name: Level2
   m_EditorClassIdentifier: 
-  LevelNumber: 1
+  LevelNumber: 2
   Words:
-  - Merhaba
-  - Elma
-  - Armut
-  - Beyza
-  - Orman
-  - Berke
-  - "A\u011Fa\xE7"
-  - Balta
-  SpawnTime: 3
-  LevelWinScore: 2500
+  - Arka
+  - Su
+  - Ruh
+  - Sinema
+  - Okur
+  - Herkes
+  - "K\xF6t\xFC"
+  - Zaman
+  SpawnTime: 2.7
+  LevelWinScore: 3500
   Life: 5
-  WordVelocity: 0.005
+  WordVelocity: 0.0055
