@@ -146,7 +146,7 @@ public class LevelSpawnManager : MonoBehaviour
     
     private Word CreatePooledItem()
     {
-        var word = Instantiate(_wordObject, new Vector3(Random.Range(-3f,3f), 4, 0), Quaternion.identity, _wordsParent);
+        var word = Instantiate(_wordObject, new Vector3(Random.Range(-2.5f,2.5f), 4, 0), Quaternion.identity, _wordsParent);
 
         return word;
     }
@@ -154,7 +154,7 @@ public class LevelSpawnManager : MonoBehaviour
     private void OnTakeFromPool(Word obj)
     {
         obj.gameObject.SetActive(true);
-        obj.gameObject.transform.position = new Vector3(Random.Range(-3f, 3f), 4, 0);
+        obj.gameObject.transform.position = new Vector3(Random.Range(-2.5f, 2.5f), 4, 0);
     }
 
     private void OnDestroyPoolObject(Word obj)

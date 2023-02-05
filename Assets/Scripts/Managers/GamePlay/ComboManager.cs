@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ComboManager : MonoBehaviour
@@ -6,6 +7,7 @@ public class ComboManager : MonoBehaviour
     
     private static ComboManager _instance;
     public static ComboManager Instance => _instance;
+    public static event Action<int> ComboChanged;
 
     private void Awake()
     {
@@ -24,10 +26,12 @@ public class ComboManager : MonoBehaviour
     public void IncreaseCombo()
     {
         ComboCount++;
+        ComboChanged?.Invoke(ComboCount);
     }
 
     public void ResetCombo()
     {
         ComboCount = 1;
+        ComboChanged?.Invoke(ComboCount);
     }
 }
