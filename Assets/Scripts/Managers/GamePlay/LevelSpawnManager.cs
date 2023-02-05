@@ -82,7 +82,7 @@ public class LevelSpawnManager : MonoBehaviour
     private IEnumerator PrepareSpawnData()
     {
         yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
-        _wordsParent = CanvasObjectReferenceHolder.Instance.WordsSpawnParent;
+        _wordsParent = GameCanvasObjectReferenceHolder.Instance.WordsSpawnParent;
         GetSpawnData();
     }
     

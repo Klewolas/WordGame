@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class CanvasObjectReferenceHolder : MonoBehaviour
+public class GameCanvasObjectReferenceHolder : MonoBehaviour
 {
-    private static CanvasObjectReferenceHolder _instance;
-    public static CanvasObjectReferenceHolder Instance => _instance;
+    private static GameCanvasObjectReferenceHolder _instance;
+    public static GameCanvasObjectReferenceHolder Instance => _instance;
     private void Awake()
     {
         if (_instance != null && _instance != this)

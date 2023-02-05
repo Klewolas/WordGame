@@ -1213,7 +1213,7 @@ GameObject:
   - component: {fileID: 953557313}
   - component: {fileID: 953557314}
   m_Layer: 0
-  m_Name: CanvasObjectReferenceHolder
+  m_Name: GameCanvasObjectReferenceHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
