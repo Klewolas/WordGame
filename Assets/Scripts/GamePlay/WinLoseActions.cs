@@ -15,6 +15,7 @@ public class WinLoseActions : MonoBehaviour
     [SerializeField] private Color loseColor;
 
     [SerializeField] private float spawnDelayTime;
+
     void Start()
     {
         LevelStateManager.LevelWin += GameWinActions;
@@ -30,10 +31,13 @@ public class WinLoseActions : MonoBehaviour
     void GameWinActions()
     {
         StartCoroutine(UpdateUIForWin());
-        if (LevelDataManager.Instance.LevelData.LevelNumber >= PlayerDataManager.Instance.PlayerData.CurrentLevel)
+        if (PlayerDataManager.Instance.PlayerData.CurrentLevel >= PlayerDataManager.Instance.PlayerData.LastOpenedLevel)
         {
-            PlayerDataManager.Instance.PlayerData.CurrentLevel++;
+            PlayerDataManager.Instance.PlayerData.LastOpenedLevel++;
+            PlayerDataManager.Instance.PlayerData.CurrentLevel = PlayerDataManager.Instance.PlayerData.LastOpenedLevel;
         }
+
+        PlayerDataManager.Instance.PlayerData.CurrentLevel++;
     }
 
     void GameLoseActions()

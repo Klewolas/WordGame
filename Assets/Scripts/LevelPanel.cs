@@ -31,7 +31,8 @@ public class LevelPanel : MonoBehaviour
         data.Clear();
 
         for (int i = 0; i < _levelReferenceHolder.levelList.Count; ++i) {
-            data.Add(new LevelItemData(_levelReferenceHolder.levelList[i].LevelNumber));
+            if(_levelReferenceHolder.levelList[i].LevelNumber <= PlayerDataManager.Instance.PlayerData.LastOpenedLevel)
+                data.Add(new LevelItemData(_levelReferenceHolder.levelList[i].LevelNumber));
         }
     }
 

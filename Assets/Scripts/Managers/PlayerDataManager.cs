@@ -46,7 +46,7 @@ public class PlayerDataManager : MonoBehaviour
 
     private PlayerData ReadFile()
     {
-        if (!File.Exists(_saveFile)) return PlayerData = new PlayerData(1);
+        if (!File.Exists(_saveFile)) return PlayerData = new PlayerData(1, 1);
 
         string fileContents = File.ReadAllText(_saveFile);
         PlayerData = JsonUtility.FromJson<PlayerData>(fileContents);

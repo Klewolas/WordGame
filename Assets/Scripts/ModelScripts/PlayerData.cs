@@ -3,8 +3,11 @@ public class PlayerData
 {
     public int CurrentLevel;
 
-    public PlayerData(int currentLevel)
+    public int LastOpenedLevel;
+
+    public PlayerData(int currentLevel, int lastOpenedLevel)
     {
         CurrentLevel = currentLevel;
+        LastOpenedLevel = lastOpenedLevel;
     }
 }
