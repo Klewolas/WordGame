@@ -6,6 +6,8 @@ public class PlayerDataManager : MonoBehaviour
 {
     public PlayerData PlayerData;
     
+    public bool IsPlayerDataReady { get; private set; }
+    
     string _saveFile;
     
     private static PlayerDataManager _instance;
@@ -21,7 +23,6 @@ public class PlayerDataManager : MonoBehaviour
             _instance = this;
         }
         
-        //TODO : Menude bulunduğu için her menu yüklendiğinde kendini dontdestroyonload'a ekliyor. MainMenu sahnesi yaratıp buradan başlatman lazım.
         DontDestroyOnLoad(gameObject);
 
     }
@@ -29,12 +30,18 @@ public class PlayerDataManager : MonoBehaviour
     private void Start()
     {
         _saveFile = Application.persistentDataPath + "/playerData.json";
-        PlayerData = ReadFile();
+        PreparePlayerData();
     }
 
     private void OnDestroy()
     {
         WriteFile();
+    }
+
+    private void PreparePlayerData()
+    {
+        PlayerData = ReadFile();
+        IsPlayerDataReady = true;
     }
 
     private PlayerData ReadFile()
