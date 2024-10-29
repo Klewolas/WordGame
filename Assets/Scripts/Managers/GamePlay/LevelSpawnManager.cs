@@ -27,6 +27,7 @@ public class LevelSpawnManager : MonoBehaviour
     private ScoreManager _scoreManager;
     private LevelStateManager _levelStateManager;
     private InputListener _inputListener;
+    private IInstantiator _instantiator;
     
     private SpawnData _spawnData;
 
@@ -46,13 +47,14 @@ public class LevelSpawnManager : MonoBehaviour
 
     [Inject]
     void Construct(LevelDataManager levelDataManager, ComboManager comboManager, ScoreManager scoreManager,
-        LevelStateManager levelStateManager, InputListener inputListener)
+        LevelStateManager levelStateManager, InputListener inputListener, IInstantiator instantiator)
     {
         _levelDataManager = levelDataManager;
         _comboManager = comboManager;
         _scoreManager = scoreManager;
         _levelStateManager = levelStateManager;
         _inputListener = inputListener;
+        _instantiator = instantiator;
     }
 
     #region Unity LifeCycle
@@ -149,8 +151,9 @@ public class LevelSpawnManager : MonoBehaviour
     
     private Word CreatePooledItem()
     {
-        var word = Instantiate(_wordObject, new Vector3(Random.Range(-2.5f,2.5f), 4, 0), Quaternion.identity, _wordsParent);
-
+        var word = _instantiator.InstantiatePrefabForComponent<Word>(_wordObject,
+            new Vector3(Random.Range(-2.5f, 2.5f), 4, 0), Quaternion.identity, _wordsParent);
+        
         return word;
     }
     

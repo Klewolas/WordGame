@@ -14,6 +14,9 @@ public class Word : MonoBehaviour
         _comboManager = comboManager;
         _levelSpawnManager = levelSpawnManager;
         _lifeManager = lifeManager;
+
+        //TODO - When this line deleted words instantiate with 196 scale. Try to fix this. (Is about IInstantiator InstantiatePrefab.
+        transform.localScale = new Vector3(1, 1, 1);
     }
     
     public string AliveWord;
