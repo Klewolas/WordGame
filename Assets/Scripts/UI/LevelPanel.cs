@@ -17,12 +17,13 @@ public class LevelPanel : MonoBehaviour
     public RecyclingListView theList;
     private List<LevelItemData> data = new List<LevelItemData>();
     
-    [SerializeField] private LevelReferenceHolder _levelReferenceHolder;
+    private LevelReferenceHolder _levelReferenceHolder;
     
     [Inject]
-    void Construct(PlayerDataManager playerDataManager)
+    void Construct(PlayerDataManager playerDataManager, LevelReferenceHolder levelReferenceHolder)
     {
         _playerDataManager = playerDataManager;
+        _levelReferenceHolder = levelReferenceHolder;
     }
     
     private void Start() {
@@ -38,9 +39,9 @@ public class LevelPanel : MonoBehaviour
     private void RetrieveData() {
         data.Clear();
 
-        for (int i = 0; i < _levelReferenceHolder.levelList.Count; ++i) {
-            if(_levelReferenceHolder.levelList[i].LevelNumber <= _playerDataManager.PlayerData.LastOpenedLevel)
-                data.Add(new LevelItemData(_levelReferenceHolder.levelList[i].LevelNumber));
+        for (int i = 0; i < _levelReferenceHolder.LevelList.Count; ++i) {
+            if(_levelReferenceHolder.LevelList[i].LevelNumber <= _playerDataManager.PlayerData.LastOpenedLevel)
+                data.Add(new LevelItemData(_levelReferenceHolder.LevelList[i].LevelNumber));
         }
     }
 

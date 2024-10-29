@@ -5,21 +5,23 @@ using UnityEngine.SceneManagement;
 public class LevelDataManager
 {
     private PlayerDataManager _playerDataManager;
+    private LevelReferenceHolder _levelReferenceHolder;
     
     public bool IsInitialized { get; private set; }
     public LevelData LevelData { get; private set; }
 
-    public LevelDataManager(PlayerDataManager playerDataManager)
+    public LevelDataManager(PlayerDataManager playerDataManager, LevelReferenceHolder levelReferenceHolder)
     {
         _playerDataManager = playerDataManager;
+        _levelReferenceHolder = levelReferenceHolder;
         
         GetLevelData();
     }
     
     void GetLevelData()
     {
-        LevelData = Resources.Load<LevelData>("ScriptableObjects/Levels/Level" +
-                                              _playerDataManager.PlayerData.CurrentLevel);
+        LevelData = _levelReferenceHolder.GetLevelData(_playerDataManager.PlayerData.CurrentLevel);
+        
         if (LevelData == null)
         {
             Debug.LogError($"LevelDataManager | Level {_playerDataManager.PlayerData.CurrentLevel} is not found");
