@@ -6,9 +6,9 @@ using Zenject;
 struct LevelConditions
 {
     public int levelWinScore;
-    public float life;
+    public int life;
 
-    public LevelConditions(int levelWinScore, float life)
+    public LevelConditions(int levelWinScore, int life)
     {
         this.levelWinScore = levelWinScore;
         this.life = life;
