@@ -1,1 +1,1 @@
-<p align="center"><i>Catch falling words measure your typing speed.</i></p>
+<p align="center"><i>Catch falling words test your typing speed.</i></p>
