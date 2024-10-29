@@ -1,27 +1,11 @@
 using System;
 using UnityEngine;
 
-public class ComboManager : MonoBehaviour
+public class ComboManager
 {
-    public int ComboCount { get; set; }
-    
-    private static ComboManager _instance;
-    public static ComboManager Instance => _instance;
-    public static event Action<int> ComboChanged;
+    public int ComboCount { get; private set; } = 1;
 
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            _instance = this;
-        }
-
-        ComboCount = 1;
-    }
+    public event Action<int> ComboChanged;
 
     public void IncreaseCombo()
     {

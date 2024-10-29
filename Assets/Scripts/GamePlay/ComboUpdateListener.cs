@@ -1,22 +1,31 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 public class ComboUpdateListener : MonoBehaviour
 {
+    private ComboManager _comboManager;
+    
     [SerializeField] private TMP_Text _comboText;
     private Sequence _sequence;
     [SerializeField] private float textScaleRate = 0.1f;
 
+    [Inject]
+    void Construct(ComboManager comboManager)
+    {
+        _comboManager = comboManager;
+    }
+    
     void Start()
     {
-        ComboManager.ComboChanged += ComboTextUpdate;
+        _comboManager.ComboChanged += ComboTextUpdate;
         _sequence = DOTween.Sequence();
     }
 
     private void OnDestroy()
     {
-        ComboManager.ComboChanged -= ComboTextUpdate;
+        _comboManager.ComboChanged -= ComboTextUpdate;
     }
 
     void ComboTextUpdate(int combo)

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using Zenject;
 using Random = UnityEngine.Random;
 
 struct SpawnData
@@ -21,9 +22,12 @@ struct SpawnData
 
 public class LevelSpawnManager : MonoBehaviour
 {
-    private static LevelSpawnManager _instance;
-    public static LevelSpawnManager Instance => _instance;
-
+    private LevelDataManager _levelDataManager;
+    private ComboManager _comboManager;
+    private ScoreManager _scoreManager;
+    private LevelStateManager _levelStateManager;
+    private InputListener _inputListener;
+    
     private SpawnData _spawnData;
 
     public List<Word> AliveWords;
@@ -40,27 +44,26 @@ public class LevelSpawnManager : MonoBehaviour
 
     #endregion
 
-    #region Unity LifeCycle
-
-    private void Awake()
+    [Inject]
+    void Construct(LevelDataManager levelDataManager, ComboManager comboManager, ScoreManager scoreManager,
+        LevelStateManager levelStateManager, InputListener inputListener)
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            _instance = this;
-        }
+        _levelDataManager = levelDataManager;
+        _comboManager = comboManager;
+        _scoreManager = scoreManager;
+        _levelStateManager = levelStateManager;
+        _inputListener = inputListener;
     }
+
+    #region Unity LifeCycle
 
     void Start()
     {
         StartCoroutine(PrepareSpawnData());
 
-        InputListener.WordMatched += WordMatchedActions;
-        LevelStateManager.LevelLose += ClearAllWords;
-        LevelStateManager.LevelWin += ClearAllWords;
+        _inputListener.WordMatched += WordMatchedActions;
+        _levelStateManager.LevelLose += ClearAllWords;
+        _levelStateManager.LevelWin += ClearAllWords;
         
         Pool = new ObjectPool<Word>(CreatePooledItem,OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, false, 10, 150);
         
@@ -72,25 +75,25 @@ public class LevelSpawnManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        InputListener.WordMatched -= WordMatchedActions;
-        LevelStateManager.LevelLose -= ClearAllWords;
-        LevelStateManager.LevelWin -= ClearAllWords;
+        _inputListener.WordMatched -= WordMatchedActions;
+        _levelStateManager.LevelLose -= ClearAllWords;
+        _levelStateManager.LevelWin -= ClearAllWords;
     }
     
     #endregion
 
     private IEnumerator PrepareSpawnData()
     {
-        yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
+        yield return new WaitUntil(() => _levelDataManager.IsInitialized);
         _wordsParent = GameCanvasObjectReferenceHolder.Instance.WordsSpawnParent;
         GetSpawnData();
     }
     
     private void GetSpawnData()
     {
-        _spawnData = new SpawnData(LevelDataManager.Instance.LevelData.Words,
-            LevelDataManager.Instance.LevelData.SpawnTime,
-            LevelDataManager.Instance.LevelData.WordVelocity);
+        _spawnData = new SpawnData(_levelDataManager.LevelData.Words,
+            _levelDataManager.LevelData.SpawnTime,
+            _levelDataManager.LevelData.WordVelocity);
     }
 
     private void WordMatchedActions(Word word)
@@ -101,8 +104,8 @@ public class LevelSpawnManager : MonoBehaviour
         AliveWords.Remove(word);
         Pool.Release(word);
         
-        ScoreManager.Instance.IncreaseScore();
-        ComboManager.Instance.IncreaseCombo();
+        _scoreManager.IncreaseScore();
+        _comboManager.IncreaseCombo();
     }
     
     
@@ -126,7 +129,7 @@ public class LevelSpawnManager : MonoBehaviour
 
     private bool CheckCanSpawn()
     {
-        return LevelStateManager.Instance.GameState == GameState.GamePlay && _spawnData.words != null;
+        return _levelStateManager.GameState == GameState.GamePlay && _spawnData.words != null;
     }
 
 

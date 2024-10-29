@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public struct LevelItemData {
     public int level;
@@ -12,11 +12,19 @@ public struct LevelItemData {
 }
 public class LevelPanel : MonoBehaviour
 {
+    private PlayerDataManager _playerDataManager;
+    
     public RecyclingListView theList;
     private List<LevelItemData> data = new List<LevelItemData>();
     
     [SerializeField] private LevelReferenceHolder _levelReferenceHolder;
-
+    
+    [Inject]
+    void Construct(PlayerDataManager playerDataManager)
+    {
+        _playerDataManager = playerDataManager;
+    }
+    
     private void Start() {
         theList.ItemCallback = PopulateItem;
 
@@ -31,7 +39,7 @@ public class LevelPanel : MonoBehaviour
         data.Clear();
 
         for (int i = 0; i < _levelReferenceHolder.levelList.Count; ++i) {
-            if(_levelReferenceHolder.levelList[i].LevelNumber <= PlayerDataManager.Instance.PlayerData.LastOpenedLevel)
+            if(_levelReferenceHolder.levelList[i].LevelNumber <= _playerDataManager.PlayerData.LastOpenedLevel)
                 data.Add(new LevelItemData(_levelReferenceHolder.levelList[i].LevelNumber));
         }
     }

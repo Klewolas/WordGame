@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 struct LevelConditions
 {
@@ -16,55 +17,52 @@ struct LevelConditions
 
 public class LevelStateManager : MonoBehaviour
 {
-    private static LevelStateManager _instance;
-    public static LevelStateManager Instance => _instance;
+    private LevelDataManager _levelDataManager;
+    private LifeManager _lifeManager;
+    private ScoreManager _scoreManager;
+    
+    public event Action LevelWin;
 
-    public static event Action LevelWin;
-
-    public static event Action LevelLose;
+    public event Action LevelLose;
 
     private LevelConditions _levelConditions;
 
     public GameState GameState { get; private set; }
 
-    private void Awake()
+    [Inject]
+    void Construct(LevelDataManager levelDataManager, LifeManager lifeManager, ScoreManager scoreManager)
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            _instance = this;
-        }
+        _levelDataManager = levelDataManager;
+        _lifeManager = lifeManager;
+        _scoreManager = scoreManager;
     }
-
+    
     private void Start()
     {
         StartCoroutine(PrepareLevelConditionsData());
 
         GameState = GameState.GamePlay;
-        ScoreManager.ScoreIncreased += CheckScoreEnoughToWin;
-        LifeManager.LoseLife += CheckIsLifeZero;
+        _scoreManager.ScoreIncreased += CheckScoreEnoughToWin;
+        _lifeManager.LoseLife += CheckIsLifeZero;
     }
 
     private void OnDestroy()
     {
-        ScoreManager.ScoreIncreased -= CheckScoreEnoughToWin;
-        LifeManager.LoseLife -= CheckIsLifeZero;
+        _scoreManager.ScoreIncreased -= CheckScoreEnoughToWin;
+        _lifeManager.LoseLife -= CheckIsLifeZero;
     }
 
     private IEnumerator PrepareLevelConditionsData()
     {
         _levelConditions = new LevelConditions(100, 100);
-        yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
+        yield return new WaitUntil(() => _levelDataManager.IsInitialized);
         GetLevelConditionsData();
     }
 
     private void GetLevelConditionsData()
     {
-        _levelConditions.life = LevelDataManager.Instance.LevelData.Life;
-        _levelConditions.levelWinScore = LevelDataManager.Instance.LevelData.LevelWinScore;
+        _levelConditions.life = _levelDataManager.LevelData.Life;
+        _levelConditions.levelWinScore = _levelDataManager.LevelData.LevelWinScore;
     }
 
     private void CheckScoreEnoughToWin(int score)

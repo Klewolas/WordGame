@@ -2,9 +2,12 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class LevelItem : RecyclingListViewItem
 {
+    private PlayerDataManager _playerDataManager;
+    
     [SerializeField] private TMP_Text _levelText;
     [SerializeField] private Button _levelButton;
 
@@ -16,6 +19,12 @@ public class LevelItem : RecyclingListViewItem
             _levelText.text = "Level : " + levelData.level.ToString();
         }
     }
+    
+    [Inject]
+    void Construct(PlayerDataManager playerDataManager)
+    {
+        _playerDataManager = playerDataManager;
+    }
 
     private void Start()
     {
@@ -24,6 +33,6 @@ public class LevelItem : RecyclingListViewItem
 
     private void SetCurrentLevel()
     {
-        PlayerDataManager.Instance.PlayerData.CurrentLevel = levelData.level;
+        _playerDataManager.PlayerData.CurrentLevel = levelData.level;
     }
 }

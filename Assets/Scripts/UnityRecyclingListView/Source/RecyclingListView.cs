@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 /// <summary>
 /// RecyclingListView uses a Unity UI ScrollRect to provide an efficiently scrolling list.
@@ -76,6 +77,14 @@ public class RecyclingListView : MonoBehaviour {
     protected bool ignoreScrollChange = false;
     protected float previousBuildHeight = 0;
     protected const int rowsAboveBelow = 1;
+
+    private IInstantiator _instantiator;
+
+    [Inject]
+    void Construct(IInstantiator instantiator)
+    {
+        _instantiator = instantiator;
+    }
 
     /// <summary>
     /// Trigger the refreshing of the list content (e.g. if you've changed some values).
@@ -201,7 +210,7 @@ public class RecyclingListView : MonoBehaviour {
 
             for (int i = 0; i < childItems.Length; ++i) {
                 if (childItems[i] == null) {
-                    childItems[i] = Instantiate(ChildPrefab);
+                    childItems[i] = _instantiator.InstantiatePrefabForComponent<RecyclingListViewItem>(ChildPrefab);
                 }
                 childItems[i].RectTransform.SetParent(scrollRect.content, false);
                 childItems[i].gameObject.SetActive(false);

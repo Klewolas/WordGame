@@ -2,40 +2,18 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public class PlayerDataManager : MonoBehaviour
+public class PlayerDataManager : IDisposable
 {
     public PlayerData PlayerData;
     
     public bool IsPlayerDataReady { get; private set; }
-    
-    string _saveFile;
-    
-    private static PlayerDataManager _instance;
-    public static PlayerDataManager Instance => _instance;
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            _instance = this;
-        }
-        
-        DontDestroyOnLoad(gameObject);
 
-    }
+    readonly string _saveFile;
 
-    private void Start()
+    private PlayerDataManager()
     {
         _saveFile = Application.persistentDataPath + "/playerData.json";
         PreparePlayerData();
-    }
-
-    private void OnDestroy()
-    {
-        WriteFile();
     }
 
     private void PreparePlayerData()
@@ -59,5 +37,10 @@ public class PlayerDataManager : MonoBehaviour
         string jsonString = JsonUtility.ToJson(PlayerData);
         File.WriteAllText(_saveFile, jsonString);
         Debug.Log("PlayerDataManager | Succesfully file writed.");
+    }
+
+    public void Dispose()
+    {
+        WriteFile();
     }
 }

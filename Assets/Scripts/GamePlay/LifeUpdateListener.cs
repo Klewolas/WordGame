@@ -3,28 +3,39 @@ using System.Collections;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 public class LifeUpdateListener : MonoBehaviour
 {
+    private LevelDataManager _levelDataManager;
+    private LifeManager _lifeManager;
+    
     [SerializeField] private TMP_Text _lifeText;
     private Sequence _sequence;
 
     private int _levelLife;
 
+    [Inject]
+    void Construct(LevelDataManager levelDataManager, LifeManager lifeManager)
+    {
+        _levelDataManager = levelDataManager;
+        _lifeManager = lifeManager;
+    }
+
     IEnumerator Start()
     {
         _sequence = DOTween.Sequence();
-        yield return new WaitUntil(() => LevelDataManager.Instance.IsInitialized);
-        _levelLife = LevelDataManager.Instance.LevelData.Life;
+        yield return new WaitUntil(() => _levelDataManager.IsInitialized);
+        _levelLife = _levelDataManager.LevelData.Life;
         
         _lifeText.text = "Life : " + _levelLife;
 
-        LifeManager.LoseLife += LifeTextUpdate;
+        _lifeManager.LoseLife += LifeTextUpdate;
     }
 
     private void OnDestroy()
     {
-        LifeManager.LoseLife -= LifeTextUpdate;
+        _lifeManager.LoseLife -= LifeTextUpdate;
     }
 
     void LifeTextUpdate(int spentLife)

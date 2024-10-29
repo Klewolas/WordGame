@@ -2,9 +2,13 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class WinLoseActions : MonoBehaviour
 {
+    private PlayerDataManager _playerDataManager;
+    private LevelStateManager _levelStateManager;
+    
     [SerializeField] private GameObject uiObjectsParent;
     [SerializeField] private TMP_Text header;
     [SerializeField] private Image backGroundImage;
@@ -16,28 +20,35 @@ public class WinLoseActions : MonoBehaviour
 
     [SerializeField] private float spawnDelayTime;
 
+    [Inject]
+    void Construct(PlayerDataManager playerDataManager, LevelStateManager levelStateManager)
+    {
+        _playerDataManager = playerDataManager;
+        _levelStateManager = levelStateManager;
+    }
+
     void Start()
     {
-        LevelStateManager.LevelWin += GameWinActions;
-        LevelStateManager.LevelLose += GameLoseActions;
+        _levelStateManager.LevelWin += GameWinActions;
+        _levelStateManager.LevelLose += GameLoseActions;
     }
 
     private void OnDestroy()
     {
-        LevelStateManager.LevelWin -= GameWinActions;
-        LevelStateManager.LevelLose -= GameLoseActions;
+        _levelStateManager.LevelWin -= GameWinActions;
+        _levelStateManager.LevelLose -= GameLoseActions;
     }
 
     void GameWinActions()
     {
         StartCoroutine(UpdateUIForWin());
-        if (PlayerDataManager.Instance.PlayerData.CurrentLevel >= PlayerDataManager.Instance.PlayerData.LastOpenedLevel)
+        if (_playerDataManager.PlayerData.CurrentLevel >= _playerDataManager.PlayerData.LastOpenedLevel)
         {
-            PlayerDataManager.Instance.PlayerData.LastOpenedLevel++;
-            PlayerDataManager.Instance.PlayerData.CurrentLevel = PlayerDataManager.Instance.PlayerData.LastOpenedLevel;
+            _playerDataManager.PlayerData.LastOpenedLevel++;
+            _playerDataManager.PlayerData.CurrentLevel = _playerDataManager.PlayerData.LastOpenedLevel;
         }
 
-        PlayerDataManager.Instance.PlayerData.CurrentLevel++;
+        _playerDataManager.PlayerData.CurrentLevel++;
     }
 
     void GameLoseActions()

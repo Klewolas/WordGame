@@ -1,37 +1,24 @@
 using System;
 using UnityEngine;
 
-public class ScoreManager : MonoBehaviour
+public class ScoreManager
 {
+    private ComboManager _comboManager;
     private int _playerScore;
 
-    [SerializeField] private int _earnScoreCount;
-    
-    private static ScoreManager _instance;
-    public static ScoreManager Instance => _instance;
+    private int _earnScoreCount = 10;
 
-    public static event Action<int> ScoreIncreased;
-    
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            _instance = this;
-        }
-    }
+    public event Action<int> ScoreIncreased;
 
-    private void Start()
+    public ScoreManager(ComboManager comboManager)
     {
+        _comboManager = comboManager;
         ResetPlayerScore();
     }
 
     public void IncreaseScore()
     {
-        _playerScore += _earnScoreCount * ComboManager.Instance.ComboCount;
+        _playerScore += _earnScoreCount * _comboManager.ComboCount;
         ScoreIncreased?.Invoke(_playerScore);
     }
 
