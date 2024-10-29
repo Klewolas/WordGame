@@ -1,12 +1,10 @@
 ﻿    using UnityEngine;
     using Zenject;
 
-    public class LevelStateManagerInstaller : MonoInstaller
+    public class LevelStateManagerInstaller : Installer<LevelStateManagerInstaller>
     {
-        [SerializeField] private LevelStateManager _levelStateManager;
-
         public override void InstallBindings()
         {
-            Container.BindInstance(_levelStateManager).AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<LevelStateManager>().AsSingle().NonLazy();
         }
     }

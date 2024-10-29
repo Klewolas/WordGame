@@ -8,5 +8,6 @@ public class GamePlayManagersInstaller : MonoInstaller
         LevelDataManagerInstaller.Install(Container);
         ScoreManagerInstaller.Install(Container);
         LifeManagerInstaller.Install(Container);
+        LevelStateManagerInstaller.Install(Container);
     }
 }

@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using UnityEngine;
+using Cysharp.Threading.Tasks;
 using Zenject;
 
 struct LevelConditions
@@ -15,7 +14,7 @@ struct LevelConditions
     }
 }
 
-public class LevelStateManager : MonoBehaviour
+public class LevelStateManager : IInitializable, IDisposable
 {
     private LevelDataManager _levelDataManager;
     private LifeManager _lifeManager;
@@ -37,25 +36,19 @@ public class LevelStateManager : MonoBehaviour
         _scoreManager = scoreManager;
     }
     
-    private void Start()
+    public void Initialize()
     {
-        StartCoroutine(PrepareLevelConditionsData());
+        PrepareLevelConditionsData().Forget();
 
         GameState = GameState.GamePlay;
         _scoreManager.ScoreIncreased += CheckScoreEnoughToWin;
         _lifeManager.LoseLife += CheckIsLifeZero;
     }
 
-    private void OnDestroy()
-    {
-        _scoreManager.ScoreIncreased -= CheckScoreEnoughToWin;
-        _lifeManager.LoseLife -= CheckIsLifeZero;
-    }
-
-    private IEnumerator PrepareLevelConditionsData()
+    private async UniTask PrepareLevelConditionsData()
     {
         _levelConditions = new LevelConditions(100, 100);
-        yield return new WaitUntil(() => _levelDataManager.IsInitialized);
+        await UniTask.WaitUntil(() => _levelDataManager.IsInitialized);
         GetLevelConditionsData();
     }
 
@@ -81,6 +74,12 @@ public class LevelStateManager : MonoBehaviour
             GameState = GameState.GameLose;
             LevelLose?.Invoke();
         }
+    }
+
+    public void Dispose()
+    {
+        _scoreManager.ScoreIncreased -= CheckScoreEnoughToWin;
+        _lifeManager.LoseLife -= CheckIsLifeZero;
     }
 }
 
